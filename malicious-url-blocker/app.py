@@ -8,19 +8,52 @@ app = Flask(__name__)
 
 model = None
 
+class URLClassifier:
+    """Simple ML model for URL classification"""
+    def predict(self, features):
+        # Simple heuristic-based classification
+        # features: [url_length, dot_count, is_ip, slash_count, equals_count, path_length]
+        if len(features) >= 6:
+            url_length, dot_count, is_ip, slash_count, equals_count, path_length = features[:6]
+            
+            # Heuristics for detecting malicious URLs
+            suspicious_score = 0
+            
+            # Unusually long URLs are often suspicious
+            if url_length > 75:
+                suspicious_score += 1
+            
+            # Multiple equals signs suggest parameter injection
+            if equals_count > 3:
+                suspicious_score += 2
+            
+            # IP-based URLs are sometimes suspicious
+            if is_ip:
+                suspicious_score += 1
+            
+            # Many slashes suggest directory traversal attempts
+            if slash_count > 6:
+                suspicious_score += 1
+            
+            if suspicious_score >= 3:
+                return 'Phishing'
+            elif suspicious_score >= 1:
+                return 'Defacement'
+        
+        return 'Benign'
+
 def load_model():
     global model
     try:
         with open('model.pkl', 'rb') as f:
             model = pickle.load(f)
-        print("Model loaded successfully")
-    except FileNotFoundError:
-        print("model.pkl not found. Please train and save your model.")
-
-        model = lambda x: 'Benign'  
+        print("✓ Model loaded successfully")
+    except (FileNotFoundError, pickle.UnpicklingError, AttributeError) as e:
+        print(f"⚠ Could not load model.pkl ({e}), using default classifier")
+        model = URLClassifier()  
 
 def extract_features(url):
-      [
+    features = [
         len(url),
         url.count('.'),
         1 if re.match(r'\d+\.\d+\.\d+\.\d+', urlparse(url).netloc) else 0,
@@ -28,7 +61,7 @@ def extract_features(url):
         url.count('='),
         len(urlparse(url).path)
     ]
-      return features 
+    return features 
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -40,9 +73,9 @@ def predict():
 
     features = extract_features(url)
     if model:
-        prediction = model(features)
+        prediction = model.predict(features)
     else:
-        prediction = 'Benign' 
+        prediction = 'Benign'
     should_block = prediction in ['Phishing', 'Defacement']
     
     return jsonify({
@@ -53,4 +86,4 @@ def predict():
 
 if __name__ == '__main__':
     load_model()
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
