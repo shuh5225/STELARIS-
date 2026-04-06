@@ -6,7 +6,6 @@ import re
 
 app = Flask(__name__)
 
-# Placeholder for ML model (save your trained model as 'model.pkl')
 model = None
 
 def load_model():
@@ -17,17 +16,11 @@ def load_model():
         print("Model loaded successfully")
     except FileNotFoundError:
         print("model.pkl not found. Please train and save your model.")
-        # Return a dummy model for testing
-        model = lambda x: 'Benign'  # Placeholder
+
+        model = lambda x: 'Benign'  
 
 def extract_features(url):
-    """
-    Placeholder for feature extraction.
-    Replace this with your ML feature extraction logic (e.g., URL length, domain age, etc.).
-    Returns a feature vector expected by your model.
-    """
-    # Example dummy features: [url_length, num_dots, has_ip, etc.]
-    features = [
+      [
         len(url),
         url.count('.'),
         1 if re.match(r'\d+\.\d+\.\d+\.\d+', urlparse(url).netloc) else 0,
@@ -35,7 +28,7 @@ def extract_features(url):
         url.count('='),
         len(urlparse(url).path)
     ]
-    return features  # Return list or array of numerical features
+      return features 
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -44,17 +37,12 @@ def predict():
     
     if not url:
         return jsonify({'error': 'URL is required'}), 400
-    
-    # Extract features (replace with your logic)
+
     features = extract_features(url)
-    
-    # Predict (replace with your model prediction)
     if model:
         prediction = model(features)
     else:
-        prediction = 'Benign'  # Fallback
-    
-    # Determine if should block
+        prediction = 'Benign' 
     should_block = prediction in ['Phishing', 'Defacement']
     
     return jsonify({
