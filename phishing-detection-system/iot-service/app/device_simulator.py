@@ -29,14 +29,29 @@ def connect_mqtt():
     return client
 
 def simulate_device_data():
+    device_id = f"device_{random.randint(1,5)}"
     while True:
         data = {
-            'device_id': DEVICE_ID,
-            'timestamp': time.time(),
-            'temperature': random.uniform(20, 30),
-            'humidity': random.uniform(40, 60),
-            'security_status': random.choice(['safe', 'suspicious'])
-        }
+    'Device': device_id,
+    'timestamp': time.time(),
+
+    # Environment
+    'temperature': random.uniform(20, 35),
+    'humidity': random.uniform(30, 70),
+    'pressure': random.uniform(990, 1025),
+
+    # Device behavior
+    'cpu_usage': random.uniform(10, 90),
+    'memory_usage': random.uniform(100, 500),  # MB
+    'battery': random.uniform(20, 100),
+
+    # Network behavior
+    'packet_rate': random.randint(10, 200),
+    'failed_logins': random.randint(0, 5),
+
+    # Security
+    'security_status': 'safe'
+}
         
         print(f"Sending IoT data: {data}")
         time.sleep(5)
