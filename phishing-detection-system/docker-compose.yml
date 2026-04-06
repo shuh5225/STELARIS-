@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - ml-service
+      - honeypot-service
+      - iot-service
+      - agentic-ai-service
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+
+  ml-service:
+    build: ./ml-service
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+
+  honeypot-service:
+    build: ./honeypot-service
+    env_file:
+      - .env
+    volumes:
+      - ./data/logs:/app/logs
+      - ./data:/app/data
+
+  iot-service:
+    build: ./iot-service
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+
+  agentic-ai-service:
+    build: ./agentic-ai-service
+    env_file:
+      - .env
+    volumes:
+      - ./shared:/app/shared:ro
+      - ./data:/app/data
+
