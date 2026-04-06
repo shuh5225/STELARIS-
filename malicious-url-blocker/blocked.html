@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blocked - Malicious URL</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      padding: 2rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+    .reason {
+      font-size: 1.3rem;
+      margin: 1.5rem 0;
+      opacity: 0.9;
+    }
+    .shield {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0.5rem;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="shield">🛡️</div>
+    <h1>Access Blocked</h1>
+    <div class="reason" id="reason">This website has been blocked for security reasons.</div>
+    <p>This site was detected as malicious by our AI-powered security system.</p>
+    <br>
+    <button class="btn" onclick="window.close()">Close Tab</button>
+    <button class="btn" onclick="chrome.runtime.sendMessage({action: 'bypass'})">Request Review</button>
+  </div>
+</body>
+</html>

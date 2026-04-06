@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Malicious URL Blocker",
+  "version": "1.0",
+  "description": "Blocks phishing and defacement URLs using ML model",
+  "permissions": [
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "blocker_rules",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  },
+  "web_accessible_resources": [{
+    "resources": ["blocked.html"],
+    "matches": ["<all_urls>"]
+  }]
+}
